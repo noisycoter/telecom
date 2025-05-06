@@ -1,0 +1,32 @@
+---
+- name: Workdir /app
+  file:
+    path: /app
+    state: directory
+    mode: '0755'  
+
+- name: Copy script and Dockerfile
+  copy:
+    src: "{{ item }}"
+    dest: "/app/{{ item }}"
+  loop:
+    - requests_script.sh
+    - Dockerfile
+
+- name: Build Docker image
+  community.docker.docker_image:
+    name: req_check
+    source: build
+    build:
+      path: /app
+      dockerfile: Dockerfile
+    state: present
+
+- name: Start container
+  community.docker.docker_container:
+    name: req_check
+    image: req_check
+    state: started
+    detach: true
+
+

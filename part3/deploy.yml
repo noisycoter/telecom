@@ -1,0 +1,6 @@
+- name: Docker installation and script check
+  hosts: all
+  become: true
+  roles:
+    - role: docker
+    - role: app
